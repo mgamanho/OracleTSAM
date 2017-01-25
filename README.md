@@ -23,6 +23,14 @@ Example:
 	# reset SYS password if necessary
 	docker exec oraclexe /u01/app/oracle/setPassword.sh <new sys password>
 
+Create an Oracle Java 8 base image 
+
+	cd docker-images/OracleJava/java-8
+
+Download the [server-jre-8u111-linux-x64.tar.gz](http://www.oracle.com/technetwork/java/javase/downloads/server-jre8-downloads-2133154.html)
+
+	sh build.sh
+
 Pull this github project
 
 	git clone https://github.com/mgamanho/OracleTSAM
