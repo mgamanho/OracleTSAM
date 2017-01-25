@@ -8,10 +8,13 @@ This project offers a sample Dockerfile for Oracle TSAM 12c (12.2.2.0.0) with ro
 The `buildDockerImage.sh` script is just a utility shell script that performs MD5 checks and is an easy way for beginners to get started. Expert users are welcome to directly call `docker build` with their prefered set of parameters.
 
 ## To use
-Pull the oracle docker-images github project
+Pull the oracle github projects
 
 	git clone https://github.com/oracle/docker-images
+	git clone https://github.com/mgamanho/OracleTSAM
   
+### Oracle DB image and container
+
 Build and run an Oracle XE 11.2.0.2.0 container, by following [these instructions](https://github.com/oracle/docker-images/tree/master/OracleDatabase) (scroll down to **Running Oracle Database Express Edition in a Docker container**)
 
 Example:
@@ -23,6 +26,8 @@ Example:
 	# reset SYS password if necessary
 	docker exec oraclexe /u01/app/oracle/setPassword.sh <new sys password>
 
+### Java 8 base image
+
 Create an Oracle Java 8 base image 
 
 	cd docker-images/OracleJava/java-8
@@ -31,9 +36,7 @@ Download the [server-jre-8u111-linux-x64.tar.gz](http://www.oracle.com/technetwo
 
 	sh build.sh
 
-Pull this github project
-
-	git clone https://github.com/mgamanho/OracleTSAM
+### TSAM Plus
 
 Download TSAM+: http://www.oracle.com/technetwork/middleware/tuxedo/downloads/index.html
 
