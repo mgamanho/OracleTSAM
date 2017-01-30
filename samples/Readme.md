@@ -14,7 +14,7 @@ Start it
 
 Change sys password to 'welcome1'
 
-        docker exec oraclexe /u01/app/oracle/setPassword.sh
+        docker exec oraclexe /u01/app/oracle/setPassword.sh welcome1
 
 ## How to build and run
 Download the following files
