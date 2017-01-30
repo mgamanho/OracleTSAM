@@ -42,10 +42,17 @@ and place in the current directory.
 
 Build image, example
 
-        docker build --build-arg db_ip=172.17.0.3 -t oracle/tux_bankapp -f Dockerfile.bankapp.shm .
+        docker build --build-arg db_ip=172.17.0.2 --build-arg tsam_ip=172.17.0.3 -t oracle/tux_bankapp -f Dockerfile.bankapp.shm .
 
 Image arguments, passed with **--build-arg**
 
 * **db_ip**         IP address of the running Oracle XE database container. Get with command:
 
         docker inspect `docker ps -a | grep oracle/database:11.2.0.2-xe | grep Up | awk '{print $1}'` | grep IPAddress
+
+* **tsam_ip**       IP address of the running TSAM Plus manager.
+
+Run image
+
+        docker run -t oracle/tux_bankapp
+
