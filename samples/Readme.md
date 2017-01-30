@@ -3,7 +3,7 @@ Oracle TSAM Plus sample domains and apps
 These sample Tuxedo containers provide applications that can be used to experiment quickly with TSAM Plus.
 
 ## Pre-requisites
-Create an Oracle XE database
+Create an Oracle XE database. Full instructions [here](https://github.com/oracle/docker-images/tree/master/OracleDatabase).
 
         cd ../../OracleDatabase/dockerfiles
         sh buildDockerImages.sh -v 11.2.0.2 -x
@@ -11,6 +11,10 @@ Create an Oracle XE database
 Start it
 
         docker run --shm-size=1g -p 1521:1521 -p 8080:8080 -v <your local directory>:/u01/app/oracle/oradata oracle/database:11.2.0.2-xe
+
+Change sys password to 'welcome1'
+
+        docker exec oraclexe /u01/app/oracle/setPassword.sh
 
 ## How to build and run
 Download the following files
