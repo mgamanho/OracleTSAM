@@ -59,6 +59,7 @@ RUN unzip /home/oracle/Downloads/bankapp.zip
 WORKDIR /home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp
 COPY ubbshm_tmpl setupdb.sh boot.sh ./
 ARG db_ip=172.17.0.2
+ARG tsam_ip=172.17.0.3
 ARG pmid=bankapp
 ARG dbpwd=welcome1
 ENV PMID $pmid
@@ -66,7 +67,8 @@ ENV DB_PWD $dbpwd
 ENV DB_IP $db_ip
 RUN sed "s=@PMID@=$pmid=g" ubbshm_tmpl > ubbshm_tmpl2 && \
     sed "s=@DBIP@=$db_ip=g" ubbshm_tmpl2 > ubbshm_tmpl3 && \
-    sed "s=@APPDIR@=/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp=g" ubbshm_tmpl3 > ubbshm && \
+    sed "s=@TSAMIP@=$tsam_ip=g" ubbshm_tmpl3 > ubbshm_tmpl4 && \
+    sed "s=@APPDIR@=/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp=g" ubbshm_tmpl4 > ubbshm && \
     sed -i 's=getline=my_getline=g' bankclt.c && \
     make -f bankapp.mk TUXDIR=$TUXDIR APPDIR=. ORACLE_HOME=/home/oracle/instantclient_12_1 && \
     buildtms -r Oracle_XA -o TMS_ORACLE && \
