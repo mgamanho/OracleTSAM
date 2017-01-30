@@ -52,7 +52,30 @@ Image arguments, passed with **--build-arg**
 
 * **tsam_ip**       IP address of the running TSAM Plus manager.
 
-Run image
+Run image in container
 
         docker run -t oracle/tux_bankapp
+
+Connect to container and run the client (get container ID with 'docker ps -l' command)
+
+        docker exec -t -i <container ID> /bin/bash
+        
+        $ ./bankclt
+        
+        
+                      Welcome to the Tuxedo Bank
+           Make a selection from the following choices
+                    1. Balance Inquiry
+                    2. Withdrawal
+                    3. Deposit
+                    4. Transfer
+                    5. Open Account
+                    6. Close Account
+                    0. Exit Application
+
+                   Enter Selection: 1
+                   
+        Enter Account Number: 10000
+                  
+        Account Balance:  $1456.00
 
