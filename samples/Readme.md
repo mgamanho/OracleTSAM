@@ -42,6 +42,6 @@ Build image, example
 
 Image arguments, passed with **--build-arg**
 
-* db_ip         IP address of the running Oracle XE database container. Get with command:
+* **db_ip**         IP address of the running Oracle XE database container. Get with command:
 
         docker inspect `docker ps -a | grep oracle/database:11.2.0.2-xe | grep Up | awk '{print $1}'` | grep IPAddress
