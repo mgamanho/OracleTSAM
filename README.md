@@ -40,7 +40,7 @@ Download the [server-jre-8u111-linux-x64.tar.gz](http://www.oracle.com/technetwo
 
 Download TSAM+: http://www.oracle.com/technetwork/middleware/tuxedo/downloads/index.html
 
-Download TSAM+ RP002: http://aru.us.oracle.com:8080/ARU/ViewPatchRequest/process_form?aru=20939386
+Download TSAM+ RP002: http://aru.us.oracle.com:8080/ARU/ViewPatchRequest/process_form?aru=20939386 ([My Oracle Support link](https://support.oracle.com/epmos/faces/PatchSearchResults?searchdata=%3Ccontext+type%3D%22BASIC%22+search%3D%22%26lt%3BSearch%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bpatch_number%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3B25389632%26quot%3B%2F%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bexclude_superseded%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3Bfalse%26quot%3B%2F%26gt%3B%0A%26lt%3B%2FSearch%26gt%3B%22%2F%3E))
 
 Download Oracle Instant Client 12.1.0.2.0 from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html, basic and sqlplus:
 * instantclient-basic-linux.x64-12.1.0.2.0.zip
