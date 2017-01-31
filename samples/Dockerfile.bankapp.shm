@@ -1,6 +1,7 @@
 # 
 # Download the following files to an empty directory:
 #   tuxedo122200_64_Linux_01_x86.zip	from http://www.oracle.com/technetwork/middleware/tuxedo/downloads/index.html
+#   23628853.zip (under patch number 25389632 TSAM Plus Agent RP002) and 25363300.zip (under patch number 25219794 Tuxedo 12.2.2.0 RP014) from http://support.oracle.com
 #   instantclient-basic-linux.x64-12.1.0.2.0.zip    from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
 #   instantclient-precomp-linux.x64-12.1.0.2.0.zip  from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
 #   instantclient-sqlplus-linux.x64-12.1.0.2.0.zip  from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
