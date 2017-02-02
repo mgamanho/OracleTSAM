@@ -1,0 +1,21 @@
+version: '2'
+services:
+  ora_db:
+    image: oracle/database:11.2.0.2-xe
+    shm_size: 1g
+    volumes:
+      - "/changeme-localDBdir:/u01/app/oracle/oradata"
+  node1:
+    hostname: node1
+    build: 
+        context: .
+        dockerfile: Dockerfile.bankappmp
+    command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
+  node2:
+    hostname: node2
+    build:
+        context: .   
+        dockerfile: Dockerfile.bankappmp
+    command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
+    depends_on:
+      - node1
