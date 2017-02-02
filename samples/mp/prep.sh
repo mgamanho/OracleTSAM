@@ -1,0 +1,2 @@
+. ./bankvar
+bash ./crtlog.sh
