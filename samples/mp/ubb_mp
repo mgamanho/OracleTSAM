@@ -1,0 +1,169 @@
+*RESOURCES
+IPCKEY		80952
+PERM		0660
+MAXACCESSERS	40
+MAXSERVERS	35
+MAXSERVICES	75
+MAXCONV		10
+MAXGTT		20
+MASTER		SITE1,SITE2
+SCANUNIT	10
+SANITYSCAN	12
+BBLQUERY	30
+BLOCKTIME	30
+DBBLWAIT	6
+OPTIONS		LAN,MIGRATE
+MODEL		MP
+LDBAL		Y
+##SECURITY	ACL
+##AUTHSVC		"..AUTHSVC"
+#
+*MACHINES
+node1	LMID=SITE1
+		TUXDIR="/home/oracle/tuxHome/tuxedo12.2.2.0.0"
+		APPDIR="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp"
+		ENVFILE="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/ENVFILE"
+		TLOGDEVICE="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/TLOG"
+		TLOGNAME=TLOG
+		TUXCONFIG="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/tuxconfig"
+node2		LMID=SITE2
+		TUXDIR="/home/oracle/tuxHome/tuxedo12.2.2.0.0"
+		APPDIR="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp"
+		ENVFILE="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/ENVFILE"
+		TLOGDEVICE="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/TLOG"
+		TLOGNAME=TLOG
+		TUXCONFIG="/home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/bankapp/tuxconfig"
+#
+*GROUPS
+#
+# Group for Authentication Servers
+#
+##AUTHGRP	LMID=SITE1	GRPNO=101
+ 
+#
+# Group for Application Queue (/Q) Servers
+#
+##QGRP1	LMID=SITE1	GRPNO=102
+##	TMSNAME=TMS_QM	TMSCOUNT=2
+##	OPENINFO="TUXEDO/QM:<APPDIR1>/qdevice:QSP_BANKAPP"
+ 
+#
+# Group for Application Manager's Servers
+#
+##MGRGRP1	LMID=SITE1      GRPNO=103
+ 
+#
+# Group for Event Broker Servers
+#
+##EVBGRP1	LMID=SITE1      GRPNO=104
+
+DEFAULT:	TMSNAME=TMS_ORACLE	TMSCOUNT=2
+BANKB1		LMID=SITE1	GRPNO=1
+	OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//ora_db/XE+Acc=P/bankdb1/bankdb1+SesTm=60+DbgFl=15+LogDir=."
+BANKB2		LMID=SITE2	GRPNO=2
+	OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//ora_db/XE+Acc=P/bankdb2/bankdb2+SesTm=60+DbgFl=15+LogDir=."
+
+*NETWORK
+SITE1	NADDR="//node1:3550"
+	NLSADDR="//node1:3450"
+SITE2	NADDR="//node2:3550"
+	NLSADDR="//node2:3450"
+*SERVERS
+#
+# TUXEDO System /T server providing application specific authentication.
+# Ref. AUTHSVR(5).
+#
+##AUTHSVR	SRVGRP=AUTHGRP	SRVID=1	RESTART=Y  GRACE=0  MAXGEN=2
+##	CLOPT="-A"
+ 
+#
+# TUXEDO System /T Message Queue Manager. It is a server that enqueues and
+# dequeues messages on behalf of programs calling tpenqueue(3) and
+# tpdequeue(3) respectively. Ref. TMQUEUE(5).
+#
+##TMQUEUE	SRVGRP=QGRP1	SRVID=1	CONV=N	GRACE=0
+##	CLOPT="-s QSP_BANKAPP:TMQUEUE"
+ 
+#
+# TUXEDO System /T Message Forwarding Server that forwards messages that have
+# been stored using tpenqueue(3) for later processing. Ref. TMQFORWARD(5).
+#
+##TMQFORWARD	SRVGRP=QGRP1	SRVID=2	CONV=N	REPLYQ=N GRACE=0
+##	CLOPT="-- -e -n -d -q Q_OPENACCT_LOG"
+
+#
+# TUXEDO System /T User Event Broker that manages user events by notifying
+# subscribers when those events are posted. Ref. TMUSREVT(5).
+#
+##TMUSREVT        SRVGRP=EVBGRP1	SRVID=1	GRACE=3600
+##		ENVFILE="<APPDIR1>/TMUSREVT.ENV"
+##		CLOPT="-e tmusrevt.out -o tmusrevt.out -A --
+##			-f <APPDIR1>/tmusrevt.dat"
+##		SEQUENCE=11
+
+#
+# TUXEDO Application Server that subscribes to certain events.
+#
+##ACCTMGR SRVGRP=MGRGRP1	SRVID=1
+##	CLOPT="-A -o ACCTMGR.LOG -- -w 1000.00"
+##		SEQUENCE=12
+ 
+#
+# TUXEDO System /T Metadata Repository Server that manages application
+# services information for retrieving and updating. Ref. TMMETADATA(5).
+#
+##TMMETADATA	SRVGRP=MGRGRP1	SRVID=1	CONV=N	RESTART=Y
+##	CLOPT="-A -- -f <APPDIR1>/metarepos.bk"
+
+
+DEFAULT: RESTART=Y MAXGEN=5 REPLYQ=Y CLOPT="-A"
+
+TLR	SRVGRP=BANKB1	SRVID=1		RQADDR=tlr1
+	CLOPT="-A -- -T 100 -e 1000.00"
+TLR	SRVGRP=BANKB1	SRVID=2		RQADDR=tlr1
+	CLOPT="-A -- -T 200 -e 1000.00"
+TLR	SRVGRP=BANKB2	SRVID=3		RQADDR=tlr2
+	CLOPT="-A -- -T 600 -e 1000.00"
+TLR	SRVGRP=BANKB2	SRVID=4		RQADDR=tlr2
+	CLOPT="-A -- -T 700 -e 1000.00"
+XFER	SRVGRP=BANKB1	SRVID=5
+XFER	SRVGRP=BANKB2	SRVID=6
+ACCT	SRVGRP=BANKB1	SRVID=7
+ACCT	SRVGRP=BANKB2	SRVID=8
+BAL	SRVGRP=BANKB1	SRVID=9	
+BAL	SRVGRP=BANKB2	SRVID=10
+BTADD	SRVGRP=BANKB1	SRVID=11
+BTADD	SRVGRP=BANKB2	SRVID=12
+AUDITC	SRVGRP=BANKB1	SRVID=13 CONV=Y MIN=1 MAX=10 RQADDR="auditc"
+BALC	SRVGRP=BANKB1	SRVID=24
+BALC	SRVGRP=BANKB2	SRVID=25
+#
+*SERVICES
+DEFAULT:	LOAD=50		AUTOTRAN=Y		TRANTIME=30
+WITHDRAWAL	PRIO=50		ROUTING=ACCOUNT_ID
+DEPOSIT		PRIO=50		ROUTING=ACCOUNT_ID
+TRANSFER	PRIO=50		ROUTING=ACCOUNT_ID
+INQUIRY		PRIO=50		ROUTING=ACCOUNT_ID
+CLOSE_ACCT	PRIO=40		ROUTING=ACCOUNT_ID
+OPEN_ACCT	PRIO=40		ROUTING=BRANCH_ID
+BR_ADD		PRIO=20		ROUTING=BRANCH_ID
+TLR_ADD		PRIO=20		ROUTING=BRANCH_ID
+ABAL		PRIO=30		ROUTING=b_id
+TBAL		PRIO=30		ROUTING=b_id
+ABAL_BID	PRIO=30		ROUTING=b_id
+TBAL_BID	PRIO=30		ROUTING=b_id
+ABALC_BID	PRIO=30		ROUTING=b_id
+TBALC_BID	PRIO=30		ROUTING=b_id
+*ROUTING
+ACCOUNT_ID	FIELD=ACCOUNT_ID
+		BUFTYPE="FML"
+		RANGES="10000-59999:BANKB1,
+			60000-109999:BANKB2"
+BRANCH_ID	FIELD=BRANCH_ID
+		BUFTYPE="FML"
+		RANGES="1-5:BANKB1,
+			6-10:BANKB2"
+b_id		FIELD=b_id
+		BUFTYPE="VIEW:aud"
+		RANGES="1-5:BANKB1,
+			6-10:BANKB2"
