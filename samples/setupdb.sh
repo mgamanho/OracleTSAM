@@ -15,7 +15,7 @@ grant connect, resource to bankdb3;
 exit
 EOF
 
-sqlplus bankdb1/bankdb1@172.17.0.3:1521/XE @crbankdl1.ora
-sqlplus bankdb2/bankdb2@172.17.0.3:1521/XE @crbankdl2.ora
-sqlplus bankdb3/bankdb3@172.17.0.3:1521/XE @crbankdl3.ora
+sqlplus bankdb1/bankdb1@$DB_IP:1521/XE @crbankdl1.ora
+sqlplus bankdb2/bankdb2@$DB_IP:1521/XE @crbankdl2.ora
+sqlplus bankdb3/bankdb3@$DB_IP:1521/XE @crbankdl3.ora
 
