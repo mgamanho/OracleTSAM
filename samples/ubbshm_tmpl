@@ -79,11 +79,11 @@ DEFAULT:	TMSNAME=TMS_ORACLE	TMSCOUNT=2 LMID=SITE1
 #BANKB3		GRPNO=3
 #		OPENINFO="Oracle_XA:Oracle_XA+Acc=P/tuxdemo3/tuxdemo3+SesTm=60+DbgFl=15+LogDir=."
 BANKB1		GRPNO=1
-		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb/bankdb+SesTm=60+DbgFl=15+LogDir=."
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb1/bankdb1+SesTm=60+DbgFl=15+LogDir=."
 BANKB2		GRPNO=2
-		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb/bankdb+SesTm=60+DbgFl=15+LogDir=."
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb2/bankdb2+SesTm=60+DbgFl=15+LogDir=."
 BANKB3		GRPNO=3
-		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb/bankdb+SesTm=60+DbgFl=15+LogDir=."
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb3/bankdb3+SesTm=60+DbgFl=15+LogDir=."
 
 
 #
