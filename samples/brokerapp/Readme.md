@@ -48,10 +48,29 @@ Increase max simultaneous connection:
 
     docker-compose up -d 
 
-## Connect to broker
+## Connect to broker and prepare domain
 
     docker exec -i -t brokerapp_broker_1 /bin/bash
 
+Create tables
+
+    $ . ./setupdb_br.sh
+
+Sometimes the following message may appear. Run the script again if that it the case.
+
+    ORA-12528: TNS:listener: all appropriate instances are blocking new connections
+
+Load all configurations
+
+    docker exec -i -t brokerapp_broker_1 /bin/bash # if not connected already
+    $ . ./setenv
+    $ tmloadcf -y ubb
+    $ dmloadcf -y dubb.broker
+    $ tmloadrepos -i all.mif metadata.rps
+    $ wsloadcf -y GWWS.deploy
+
 ## Boot domain
 
-    . ./boot.sh
+    docker exec -i -t brokerapp_broker_1 /bin/bash # if not connected already
+    $ . ./setenv
+    $ tmboot -y
