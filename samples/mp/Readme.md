@@ -39,7 +39,7 @@ For Tuxedo 12.2.2, you need JRE installed first. Before you can build this image
 Tux 12.2.2 image needs to be built
 
     cd ../OracleTuxedo/dockerfiles/12.2.2
-    docker build -t oracle/tuxedo:12.2.2
+    docker build -t oracle/tuxedo:12.2.2 .
 
 Also download
 
