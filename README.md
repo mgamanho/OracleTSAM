@@ -13,6 +13,10 @@ Pull the oracle github projects
   
 ### Oracle DB image and container
 
+Download the Oracle XE installer from [here](http://www.oracle.com/technetwork/database/database-technologies/express-edition/downloads/index.html) and copy it to
+
+    docker-images/OracleDatabase/dockerfiles/11.2.0.2
+
 Build and run an Oracle XE 11.2.0.2.0 container, by following [these instructions](https://github.com/oracle/docker-images/tree/master/OracleDatabase) (scroll down to **Running Oracle Database Express Edition in a Docker container**)
 
 Example:
