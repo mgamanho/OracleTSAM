@@ -95,3 +95,4 @@ Then connect to console at http://localhost:7001/console
 
 When deployment goes well, you can log in to TSAM at http://localhost:7001/tsam
 
+## The demo environment is ready to use.
