@@ -3,9 +3,7 @@ Oracle TSAM Plus on Docker
 Sample Docker build files to facilitate installation, configuration, and environment setup for DevOps users.
 
 ## How to build and run
-This project offers a sample Dockerfile for Oracle TSAM 12c (12.2.2.0.0) with rolling patch 002. To assist in building the images, you can use the [buildDockerImage.sh](dockerfiles/buildDockerImage.sh) script. See below for instructions and usage.
-
-The `buildDockerImage.sh` script is just a utility shell script that performs MD5 checks and is an easy way for beginners to get started. Expert users are welcome to directly call `docker build` with their prefered set of parameters.
+This project offers a sample Dockerfile for Oracle TSAM 12c (12.2.2.0.0) with rolling patch 002.
 
 ## To use
 Pull the oracle github projects
