@@ -74,3 +74,24 @@ Load all configurations
     docker exec -i -t brokerapp_broker_1 /bin/bash # if not connected already
     $ . ./setenv
     $ tmboot -y
+
+## Start TSAM Plus
+
+### Redeploy TSAM app
+
+    docker exec -i -t brokerapp_tsamnode_1 /bin/bash
+    $ cd OraHome_1/tsam12.2.2.0.0/bin
+    $ ./startup.sh
+
+Then connect to console at http://localhost:7001/console
+
+* Go to **Deployments**
+* Click on **Install** button
+* In *Current Location* navigate to "localhost / home / oracle / OraHome_1 / tsam12.2.2.0.0 / deploy"
+* Select the ear file you created previously, should be named tsam_wsl12c_new.ear
+* Click **Next**
+* Use the default and click **Next** again
+* Use the defaults and click **Finish**
+
+When deployment goes well, you can log in to TSAM at http://localhost:7001/tsam
+
