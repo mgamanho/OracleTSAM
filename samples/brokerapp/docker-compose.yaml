@@ -1,6 +1,6 @@
 version: '2'
 services:
-  tsam_node:
+  tsamnode:
     image: oracle/tsam:v2
     command: /bin/bash -c "while true; do foo; sleep 2; done"
     ports:
