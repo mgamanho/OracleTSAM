@@ -1,13 +1,20 @@
-## Steps
+## Introduction
 
-Create TSAM and Oracle DB containers as explained [here](https://github.com/mgamanho/OracleTSAM).
+This application uses TSAM Plus for monitoring. In order to build the TSAM Plus image, an Oracle DB image must also be built. The TSAM PLus and Oracle DB images are built outside of docker-compose then integrated here. See docker-compose.yaml
+
+The TSAM Plus and Oracle DB containers are create as outlined [here](https://github.com/mgamanho/OracleTSAM).
+
+Once these images are built, one step is required to place the correct Oracle DB address in the TSAM Plus configuration, this is outlined below.
+
+Once the TSAM Plus and Oracle DB images are built, proceed with the steps below.
 
 ### Ensure database can support XA
 
-in Oracle XE container
+Start the Oracle XE container
 
-    cd $ORACLE_HOME/rdbms/admin
-    sqlplus sys/welcome1@localhost:1521/XE as sysdba @xaview.sql
+    docker run --name oraclexe --shm-size=1g -p 1521:1521 -p 8080:8080 -v ~/dockerDB:/u01/app/oracle/oradata oracle/database:11.2.0.2-xe
+    $ cd $ORACLE_HOME/rdbms/admin
+    $ sqlplus sys/welcome1@localhost:1521/XE as sysdba @xaview.sql
 
 then
 
@@ -23,10 +30,19 @@ Increase max simultaneous connection:
     sqlplus sys/welcome1@localhost:1521/XE as sysdba
     SQL> alter system set processes=1000 scope=spfile;
     SQL> shutdown immediate;
+    
+At this point you can stop the Oracle DB container and delete it (all information is persisted in the local volume).
+
+    docker rm oraclexe
 
 ### Change connection address in TSAM domain
 
+Start the TSAM Plus container in interactive mode
+
     docker run -i -t oracle/tsam
+    
+Use the following commands to configure the reference to the Oracle DB node for when the containers are run using docker-compose
+    
     cd OraHome_1/tsam12.2.2.0.0/deploy
     mkdir tsam_wls12c
     jar xf ../tsam_wls12c.ear
@@ -96,3 +112,9 @@ Then connect to console at http://localhost:7001/console
 When deployment goes well, you can log in to TSAM at http://localhost:7001/tsam
 
 ## The demo environment is ready to use.
+
+Access any of the nodes using *docker exec*
+
+e.g. to log into the broker domain
+
+    docker exec -i -t brokerapp_broker_1 /bin/bash
