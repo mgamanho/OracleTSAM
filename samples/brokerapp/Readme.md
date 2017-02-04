@@ -12,6 +12,11 @@ Once the Tuxedo 12.2.2, TSAM Plus and Oracle DB images are built, proceed with t
 
 ## Preparing and running the Broker App Demo
 
+### Clone repository locally and navigate to brokerapp sample directory
+
+    git clone https://github.com/mgamanho/OracleTSAM
+    cd samples/brokerapp
+
 ### Download required files
 
 Download the following files
