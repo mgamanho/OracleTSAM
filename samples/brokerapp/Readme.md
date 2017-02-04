@@ -1,12 +1,27 @@
 ## Introduction
 
+First build the Tuxedo 12.2.2 image using the instructions [here](https://github.com/oracle/docker-images/tree/master/OracleTuxedo). Make sure to download the Oracle Tuxedo 12.2.2.0 binary installer first.
+
 This application uses TSAM Plus for monitoring. In order to build the TSAM Plus image, an Oracle DB image must also be built. The TSAM PLus and Oracle DB images are built outside of docker-compose then integrated here. See docker-compose.yaml
 
-The TSAM Plus and Oracle DB containers are create as outlined [here](https://github.com/mgamanho/OracleTSAM).
+The TSAM Plus and Oracle DB containers are create as outlined [here](https://github.com/mgamanho/OracleTSAM). Make sure to download the required files.
 
 Once these images are built, one step is required to place the correct Oracle DB address in the TSAM Plus configuration, this is outlined below.
 
-Once the TSAM Plus and Oracle DB images are built, proceed with the steps below.
+Once the Tuxedo 12.2.2, TSAM Plus and Oracle DB images are built, proceed with the steps below.
+
+## Preparing and running the Broker App Demo
+
+### Download required files
+
+Download the following files
+
+* TSAM Agent RP002 from [here](https://support.oracle.com/epmos/faces/PatchSearchResults?searchdata=%3Ccontext+type%3D%22BASIC%22+search%3D%22%26lt%3BSearch%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bpatch_number%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3B25389632%26quot%3B%2F%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bexclude_superseded%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3Bfalse%26quot%3B%2F%26gt%3B%0A%26lt%3B%2FSearch%26gt%3B%22%2F%3E) then extract file 23628853.zip
+* Tuxedo 12.2.2.0 RP014 from [here](https://support.oracle.com/epmos/faces/PatchSearchResults?searchdata=%3Ccontext+type%3D%22BASIC%22+search%3D%22%26lt%3BSearch%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bpatch_number%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3B25219794%26quot%3B%2F%26gt%3B%0A%26lt%3BFilter+name%3D%26quot%3Bexclude_superseded%26quot%3B+op%3D%26quot%3Bis%26quot%3B+value%3D%26quot%3Bfalse%26quot%3B%2F%26gt%3B%0A%26lt%3B%2FSearch%26gt%3B%22%2F%3E) then extract file 25363300.zip
+* instantclient-basic-linux.x64-12.1.0.2.0.zip   from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+* instantclient-precomp-linux.x64-12.1.0.2.0.zip from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+* instantclient-sqlplus-linux.x64-12.1.0.2.0.zip from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+* bankapp.zip from http://www.oracle.com/technetwork/indexes/samplecode/tuxedo-sample-522120.html
 
 ### Ensure database can support XA
 
