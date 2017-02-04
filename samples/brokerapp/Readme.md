@@ -1,6 +1,8 @@
-## Introduction
+## Introduction and pre-requisites
 
-First build the Tuxedo 12.2.2 image using the instructions [here](https://github.com/oracle/docker-images/tree/master/OracleTuxedo). Make sure to download the Oracle Tuxedo 12.2.2.0 binary installer first.
+Tuxedo 12.2.2.0 depends on Java. As a first step build an Oracle Java 8 image as described [here](https://github.com/oracle/docker-images/tree/master/OracleJava).
+
+Build the Tuxedo 12.2.2 image using the instructions [here](https://github.com/oracle/docker-images/tree/master/OracleTuxedo). Make sure to download the Oracle Tuxedo 12.2.2.0 binary installer.
 
 This application uses TSAM Plus for monitoring. In order to build the TSAM Plus image, an Oracle DB image must also be built. The TSAM PLus and Oracle DB images are built outside of docker-compose then integrated here. See docker-compose.yaml
 
