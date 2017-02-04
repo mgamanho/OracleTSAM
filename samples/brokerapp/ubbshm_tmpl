@@ -1,0 +1,199 @@
+#	(c) 2005 BEA Systems, Inc. All Rights Reserved.
+#Copyright (c) 1991 Unix System Laboratories, Inc.
+#All rights reserved
+#ident	"@(#) samples/atmi/bankapp/ubbshm	$Revision: 1.6 $"
+
+#
+# The banking demo application, bankapp, has been enhanced to demonstrate
+# some of the new features introduced in release 6. For a list of the new
+# features and how they appear in bankapp, refer to the file README2 under
+# the bankapp directory ($TUXDIR/apps/bankapp/README2). The bankapp
+# application comes "armed" with these features but not "activated". The
+# README2 file lists the steps required to "activate" the new features.
+#
+# Lines in this file beginning with the characters '##' relate to the new
+# features in bankapp. (Recall that lines beginning with the '#' character
+# are treated as comments). Comments are inserted in-line to briefly explain 
+# the new features where they appear.
+#
+
+*RESOURCES
+IPCKEY		80952
+PERM		0660
+MAXACCESSERS	40
+MAXSERVERS	35
+MAXSERVICES	75
+MAXCONV		10
+MASTER		SITE1
+SCANUNIT	10
+MODEL		SHM	
+LDBAL		Y
+##SECURITY	ACL
+##AUTHSVC		"..AUTHSVC"
+#
+#
+*MACHINES
+@PMID@ LMID=SITE1
+		TUXDIR="/home/oracle/tuxHome/tuxedo12.2.2.0.0"
+		APPDIR="@APPDIR@"
+		ENVFILE="@APPDIR@/ENVFILE"
+		TLOGDEVICE="@APPDIR@/TLOG"
+		TLOGNAME=TLOG
+		TUXCONFIG="@APPDIR@/tuxconfig"
+
+#
+#
+*GROUPS
+#
+# Group for Authentication Servers
+#
+##AUTHGRP	LMID=SITE1	GRPNO=101
+ 
+#
+# Group for Application Queue (/Q) Servers
+#
+##QGRP1	LMID=SITE1	GRPNO=102
+##	TMSNAME=TMS_QM	TMSCOUNT=2
+##	OPENINFO="TUXEDO/QM:<APPDIR1>/qdevice:QSP_BANKAPP"
+ 
+#
+# Group for Application Manager's Servers
+#
+##MGRGRP1	LMID=SITE1      GRPNO=103
+ 
+#
+# Group for Event Broker Servers
+#
+##EVBGRP1	LMID=SITE1      GRPNO=104
+
+#
+# Group for LMS server
+#
+LMSGRP		LMID=SITE1      GRPNO=105 OPENINFO=NONE
+
+SYSGRP		LMID=SITE1	GRPNO=106
+GWGRP		LMID=SITE1	GRPNO=107
+
+DEFAULT:	TMSNAME=TMS_ORACLE	TMSCOUNT=2 LMID=SITE1
+#BANKB1		GRPNO=1
+#		OPENINFO="Oracle_XA:Oracle_XA+Acc=P/tuxdemo1/tuxdemo1+SesTm=60+DbgFl=15+LogDir=."
+#BANKB2		GRPNO=2
+#		OPENINFO="Oracle_XA:Oracle_XA+Acc=P/tuxdemo2/tuxdemo2+SesTm=60+DbgFl=15+LogDir=."
+#BANKB3		GRPNO=3
+#		OPENINFO="Oracle_XA:Oracle_XA+Acc=P/tuxdemo3/tuxdemo3+SesTm=60+DbgFl=15+LogDir=."
+BANKB1		GRPNO=1
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb1/bankdb1+SesTm=60+DbgFl=15+LogDir=."
+BANKB2		GRPNO=2
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb2/bankdb2+SesTm=60+DbgFl=15+LogDir=."
+BANKB3		GRPNO=3
+		OPENINFO="Oracle_XA:Oracle_XA+SqlNet=//@DBIP@/XE+Acc=P/bankdb3/bankdb3+SesTm=60+DbgFl=15+LogDir=."
+
+
+#
+#
+*SERVERS
+#
+# TUXEDO System /T server providing application specific authentication.
+# Ref. AUTHSVR(5).
+#
+##AUTHSVR	SRVGRP=AUTHGRP	SRVID=1	RESTART=Y  GRACE=0  MAXGEN=2
+##	CLOPT="-A"
+ 
+#
+# TUXEDO System /T Message Queue Manager. It is a server that enqueues and
+# dequeues messages on behalf of programs calling tpenqueue(3) and
+# tpdequeue(3) respectively. Ref. TMQUEUE(5).
+#
+##TMQUEUE	SRVGRP=QGRP1	SRVID=1	CONV=N	GRACE=0
+##	CLOPT="-s QSP_BANKAPP:TMQUEUE"
+ 
+#
+# TUXEDO System /T Message Forwarding Server that forwards messages that have
+# been stored using tpenqueue(3) for later processing. Ref. TMQFORWARD(5).
+#
+##TMQFORWARD	SRVGRP=QGRP1	SRVID=2	CONV=N	REPLYQ=N GRACE=0
+##	CLOPT="-- -e -n -d -q Q_OPENACCT_LOG"
+
+#
+# TUXEDO System /T User Event Broker that manages user events by notifying
+# subscribers when those events are posted. Ref. TMUSREVT(5).
+#
+##TMUSREVT        SRVGRP=EVBGRP1	SRVID=1	GRACE=3600
+##		ENVFILE="<APPDIR1>/TMUSREVT.ENV"
+##		CLOPT="-e tmusrevt.out -o tmusrevt.out -A --
+##			-f <APPDIR1>/tmusrevt.dat"
+##		SEQUENCE=11
+
+#
+# TUXEDO Application Server that subscribes to certain events.
+#
+##ACCTMGR SRVGRP=MGRGRP1	SRVID=1
+##	CLOPT="-A -o ACCTMGR.LOG -- -w 1000.00"
+##		SEQUENCE=12
+
+#
+# TUXEDO System /T Metadata Repository Server that manages application
+# services information for retrieving and updating. Ref. TMMETADATA(5).
+#
+##TMMETADATA	SRVGRP=MGRGRP1	SRVID=1	CONV=N	RESTART=Y
+##	CLOPT="-A -- -f <APPDIR1>/metarepos.bk"
+
+LMS 		SRVGRP=LMSGRP SRVID=1 CLOPT="-A -- -l @TSAMIP@:7001/tsam"
+DMADM       SRVGRP=SYSGRP   SRVID=100
+GWADM       SRVGRP=GWGRP    SRVID=300
+GWTDOMAIN   SRVGRP=GWGRP    SRVID=500
+
+DEFAULT: RESTART=Y MAXGEN=5 REPLYQ=Y CLOPT="-A"
+TLR	SRVGRP=BANKB1	SRVID=1		CLOPT="-A -- -T 100 -e 1000.00"
+TLR	SRVGRP=BANKB2	SRVID=2		CLOPT="-A -- -T 500 -e 1000.00"
+TLR	SRVGRP=BANKB3	SRVID=3		CLOPT="-A -- -T 800 -e 1000.00"
+XFER	SRVGRP=BANKB1	SRVID=4
+XFER	SRVGRP=BANKB2	SRVID=5
+XFER	SRVGRP=BANKB3	SRVID=6
+ACCT	SRVGRP=BANKB1	SRVID=7
+ACCT	SRVGRP=BANKB2	SRVID=8
+ACCT	SRVGRP=BANKB3	SRVID=9
+BAL	SRVGRP=BANKB1	SRVID=10 
+BAL	SRVGRP=BANKB2	SRVID=11
+BAL	SRVGRP=BANKB3	SRVID=12
+BTADD	SRVGRP=BANKB1	SRVID=13
+BTADD	SRVGRP=BANKB2	SRVID=14
+BTADD	SRVGRP=BANKB3	SRVID=15
+AUDITC	SRVGRP=BANKB1	SRVID=16 CONV=Y MIN=1 MAX=10 RQADDR="auditc"
+BALC	SRVGRP=BANKB1	SRVID=27 
+BALC	SRVGRP=BANKB2	SRVID=28
+BALC	SRVGRP=BANKB3	SRVID=29
+#
+#
+*SERVICES
+DEFAULT:	LOAD=50		AUTOTRAN=Y		TRANTIME=30
+WITHDRAWAL	PRIO=50		ROUTING=ACCOUNT_ID
+DEPOSIT		PRIO=50		ROUTING=ACCOUNT_ID
+TRANSFER	PRIO=50		ROUTING=ACCOUNT_ID
+INQUIRY		PRIO=50		ROUTING=ACCOUNT_ID
+CLOSE_ACCT	PRIO=40		ROUTING=ACCOUNT_ID
+OPEN_ACCT	PRIO=40		ROUTING=BRANCH_ID
+BR_ADD		PRIO=20		ROUTING=BRANCH_ID
+TLR_ADD		PRIO=20		ROUTING=BRANCH_ID
+ABAL		PRIO=30		ROUTING=b_id
+TBAL		PRIO=30		ROUTING=b_id
+ABAL_BID	PRIO=30		ROUTING=b_id
+TBAL_BID	PRIO=30		ROUTING=b_id
+ABALC_BID	PRIO=30		ROUTING=b_id
+TBALC_BID	PRIO=30		ROUTING=b_id
+*ROUTING
+ACCOUNT_ID	FIELD=ACCOUNT_ID
+		BUFTYPE="FML"
+		RANGES="10000-49999:BANKB1,
+			50000-79999:BANKB2,
+			80000-109999:BANKB3"
+BRANCH_ID	FIELD=BRANCH_ID
+		BUFTYPE="FML"
+		RANGES="1-4:BANKB1,
+			5-7:BANKB2,
+			8-10:BANKB3"
+b_id		FIELD=b_id
+		BUFTYPE="VIEW:aud"
+		RANGES="1-4:BANKB1,
+			5-7:BANKB2,
+			8-10:BANKB3"

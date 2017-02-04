@@ -1,0 +1,76 @@
+# 
+# Download the following files to an empty directory:
+#   tuxedo122200_64_Linux_01_x86.zip	from http://www.oracle.com/technetwork/middleware/tuxedo/downloads/index.html
+#   instantclient-basic-linux.x64-12.1.0.2.0.zip    from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+#   instantclient-precomp-linux.x64-12.1.0.2.0.zip  from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+#   instantclient-sqlplus-linux.x64-12.1.0.2.0.zip  from http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+#
+# For Tuxedo 12.2.2, you need JRE installed first, so before you can build this image, you must download the Oracle Server JRE binary and drop in folder OracleJava/java-8 and build that image.
+#
+#   cd ../OracleJava/java-8
+#   sh build.sh
+#
+# Tux 12.2.2 image needs to be built before this one
+#
+#   cd ../OracleTuxedo/dockerfiles/12.2.2
+#   docker build -t oracle/tuxedo:12.2.2
+#
+# Also download
+#   brokerapp.zip from http://www.oracle.com/technetwork/indexes/samplecode/tuxedo-sample-522120.html
+
+# Pull base image
+FROM oracle/tuxedo:12.2.2
+
+USER root
+
+# libaio is for sqlplus and DB access
+RUN yum -y install make libaio; yum -y clean all
+
+COPY brokerapp.tgz install.sh /home/oracle/Downloads/
+COPY instantclient-sqlplus-linux.x64-12.1.0.2.0.zip instantclient-precomp-linux.x64-12.1.0.2.0.zip instantclient-basic-linux.x64-12.1.0.2.0.zip /home/oracle/Downloads/
+COPY 23628853.zip 25363300.zip /home/oracle/Downloads/
+COPY sleep.sh start_tlisten.sh /home/oracle/
+
+RUN chown oracle:oracle -R /home/oracle
+WORKDIR /home/oracle/Downloads
+USER oracle
+
+RUN /home/oracle/tuxHome/OPatch/opatch apply /home/oracle/Downloads/23628853.zip -invPtrLoc /home/oracle/tuxHome/oraInst.loc
+RUN /home/oracle/tuxHome/OPatch/opatch apply /home/oracle/Downloads/25363300.zip -invPtrLoc /home/oracle/tuxHome/oraInst.loc
+
+WORKDIR /home/oracle
+RUN unzip Downloads/instantclient-basic-linux.x64-12.1.0.2.0.zip && \
+    unzip Downloads/instantclient-precomp-linux.x64-12.1.0.2.0.zip && \
+    unzip Downloads/instantclient-sqlplus-linux.x64-12.1.0.2.0.zip
+COPY pcscfg.cfg /home/oracle/instantclient_12_1/precomp/admin
+RUN cp -r /home/oracle/instantclient_12_1/sdk /home/oracle/instantclient_12_1/bin && \
+    mkdir /home/oracle/instantclient_12_1/lib && \
+    ln /home/oracle/instantclient_12_1/libclntsh.so.12.1 /home/oracle/instantclient_12_1/lib/libclntsh.so
+
+ENV TUXDIR /home/oracle/tuxHome/tuxedo12.2.2.0.0
+ENV ORACLE_HOME /home/oracle/instantclient_12_1
+ENV PATH /home/oracle/tuxHome/tuxedo12.2.2.0.0/bin:/home/oracle/instantclient_12_1/bin:$PATH
+ENV LD_LIBRARY_PATH /home/oracle/tuxHome/tuxedo12.2.2.0.0/lib:/home/oracle/instantclient_12_1:$LD_LIBRARY_PATH
+
+# Clean up installer files
+RUN rm -f instantclient*.zip
+
+USER oracle
+RUN mkdir -p /home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/brokerapp
+WORKDIR /home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/brokerapp
+RUN tar xvzf /home/oracle/Downloads/brokerapp.tgz
+
+WORKDIR /home/oracle/tuxHome/tuxedo12.2.2.0.0/apps/brokerapp
+COPY ubb_mp ./
+ARG dbpwd=welcome1
+ARG site
+ENV DB_PWD $dbpwd
+ENV SITE $site
+ENV DB_IP ora_db
+RUN make -f brokerapp.mk && \
+    sh prep.sh && \
+    buildtms -r Oracle_XA -o TMS_ORACLE
+#RUN sed -i 's=getline=my_getline=g' bankclt.c && \
+#    make -f bankapp.mk TUXDIR=$TUXDIR APPDIR=. ORACLE_HOME=/home/oracle/instantclient_12_1 && \
+#    buildtms -r Oracle_XA -o TMS_ORACLE && \
+#    sh prep.sh

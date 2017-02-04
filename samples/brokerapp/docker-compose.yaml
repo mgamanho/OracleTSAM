@@ -1,7 +1,7 @@
 version: '2'
 services:
   tsamnode:
-    image: oracle/tsam:v2
+    image: oracle/tsam
     command: /bin/bash -c "while true; do foo; sleep 2; done"
     ports:
       - "7001:7001"
@@ -9,34 +9,47 @@ services:
     image: oracle/database:11.2.0.2-xe
     shm_size: 1g
     volumes:
-      - "/changeme-localDBdir:/u01/app/oracle/oradata"
+      - "~/dockerDBtest:/u01/app/oracle/oradata"
   sanfrancisco:
     hostname: sanfrancisco
     build: 
         context: .
         dockerfile: Dockerfile.bankapp.shm
-    command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
+        args:
+          site: sanfrancisco
+          siteu: SANFRANCISCO
+    command: /bin/bash -x boot.sh
   chicago:
     hostname: chicago
     build: 
         context: .
         dockerfile: Dockerfile.bankapp.shm
-    command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
+        args:
+          site: chicago
+          siteu: CHICAGO
+    command: /bin/bash -x boot.sh
   newyork:
     hostname: newyork
     build: 
         context: .
         dockerfile: Dockerfile.bankapp.shm
-    command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
+        args:
+          site: newyork
+          siteu: NEWYORK
+    command: /bin/bash -x boot.sh
   broker:
     hostname: broker
     build:
         context: .   
         dockerfile: Dockerfile.brokerapp
+        args:
+          site: SITE1
     command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
   brokerbackup:
     hostname: brokerbackup
     build:
         context: .   
         dockerfile: Dockerfile.brokerapp
+        args:
+          site: SITE2
     command: /bin/bash -x /home/oracle/sleep.sh &> sleep.log
