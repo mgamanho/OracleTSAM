@@ -19,6 +19,8 @@ Download the Oracle XE installer from [here](http://www.oracle.com/technetwork/d
 
 Build and run an Oracle XE 11.2.0.2.0 container, by following [these instructions](https://github.com/oracle/docker-images/tree/master/OracleDatabase) (scroll down to **Running Oracle Database Express Edition in a Docker container**)
 
+**Note:** the local directory in the volume mapping (**~/dockerDB**:/u01/app/oracle/oradata) must belong to an oracle/oracle user with id/group of 1000/1000.
+
 Example:
 
 	cd docker-images/OracleDatabase/dockerfiles
@@ -27,6 +29,8 @@ Example:
  	docker run --name oraclexe --shm-size=1g -p 1521:1521 -p 8080:8080 -v ~/dockerDB:/u01/app/oracle/oradata oracle/database:11.2.0.2-xe
 	# reset SYS password if necessary
 	docker exec oraclexe /u01/app/oracle/setPassword.sh <new sys password>
+
+Leave the database running in that 'exec' shell.
 
 ### Java 8 base image
 
