@@ -27,10 +27,12 @@ Example:
 	buildDockerImage.sh -v 11.2.0.2 -x
 	mkdir ~/dockerDB
  	docker run --name oraclexe --shm-size=1g -p 1521:1521 -p 8080:8080 -v ~/dockerDB:/u01/app/oracle/oradata oracle/database:11.2.0.2-xe
-	# reset SYS password if necessary
-	docker exec oraclexe /u01/app/oracle/setPassword.sh <new sys password>
+	# reset SYS password
+	docker exec oraclexe /u01/app/oracle/setPassword.sh welcome1
 
-Leave the database running in that 'exec' shell.
+The *welcome1* value is used in the TSAM Plus build script. 
+
+Also, leave the database running in that 'exec' shell, open a new one to continue with the setup.
 
 ### Java 8 base image
 
