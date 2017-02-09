@@ -67,6 +67,7 @@ Use the following commands to configure the reference to the Oracle DB node for 
     
     cd OraHome_1/tsam12.2.2.0.0/deploy
     mkdir tsam_wls12c
+    cd tsam_wls12c
     jar xf ../tsam_wls12c.ear
     mkdir tsam
     cd tsam
