@@ -79,6 +79,14 @@ Use the following commands to configure the reference to the Oracle DB node for 
     cd ..; rm -rf tsam
     jar cf ../tsam_wsl12c_new.ear *
 
+## Before continuing
+
+Make sure any TSAM Plus and/or Oracle Database containers are stopped. Use the
+
+    docker ps -a
+    
+command to see active containers.
+
 ## Build images in compose network
 
     docker-compose build
